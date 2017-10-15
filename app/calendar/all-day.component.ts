@@ -18,6 +18,8 @@ import {
 } from 'angular-calendar';
 
 import { EventsService } from '../events/events.service';
+import { Observable } from 'rxjs/Observable';
+
 
 const colors: any = {
   red: {
@@ -69,35 +71,8 @@ export class CalendarDayViewComponent implements OnInit {
   refresh: Subject<any> = new Subject();
 
   titles: string[] = ["1","2","3"];
-  events: CalendarEvent[] = [];
-  // {
-  //   start: subDays(startOfDay(new Date()), 1),
-  //   end: addDays(new Date(), 1),
-  //   title: 'A 3 day event',
-  //   color: colors.red,
-  //   actions: this.actions
-  // }, {
-  //   start: startOfDay(new Date()),
-  //   title: 'An event with no end date',
-  //   color: colors.yellow,
-  //   actions: this.actions
-  // }, {
-  //   start: subDays(endOfMonth(new Date()), 3),
-  //   end: addDays(endOfMonth(new Date()), 3),
-  //   title: 'A long event that spans 2 months',
-  //   color: colors.blue
-  // }, {
-  //   start: addHours(startOfDay(new Date()), 2),
-  //   end: new Date(),
-  //   title: 'A draggable and resizable event',
-  //   color: colors.yellow,
-  //   actions: this.actions,
-  //   resizable: {
-  //     beforeStart: true,
-  //     afterEnd: true
-  //   },
-  //   draggable: true
-  // }
+ events: CalendarEvent[] = [];
+ eventsFireBase: Observable<CalendarEvent[]>;
 
   activeDayIsOpen: boolean = true;
 
@@ -107,9 +82,12 @@ export class CalendarDayViewComponent implements OnInit {
     // this.eventService.getEvents().subscribe(data =>
     //  {this.events.push(data[data.length-1]),
     //    console.log(this.events)} )
-       this.eventService.getEvents().subscribe(data =>
-     {this.events = data,
-       console.log(this.events),this.stringToDate(),this.refresh.next();} )
+    //    this.eventService.getEvents().subscribe(data =>
+    //  {this.events = data,
+    //    console.log(this.events),this.stringToDate(),this.refresh.next();} )
+
+     this.eventService.getEventsFireBase().map(events => events.filter(event => event.isActive)).subscribe(data=>{this.events = data,console.log("events:"+this.events);});
+      
   }
 
   dayClicked({date, events}: {date: Date, events: CalendarEvent[]}): void {
@@ -141,6 +119,7 @@ export class CalendarDayViewComponent implements OnInit {
 
   addEvent(): void {
     this.events.push({
+      id:null,
       title: 'New event',
       start: startOfDay(new Date()),
       end: endOfDay(new Date()),
@@ -149,7 +128,8 @@ export class CalendarDayViewComponent implements OnInit {
       resizable: {
         beforeStart: true,
         afterEnd: true
-      }
+      },
+      isActive:true
     });
     this.refresh.next();
   }

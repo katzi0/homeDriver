@@ -40,12 +40,12 @@
             </mwl-demo-utils-date-time-picker>
           </td>
           <td>
-            <button class="btn btn-danger" (click)="events.splice(index, 1)"><!--; refresh.next()-->
+            <button class="btn btn-danger" (click)="events.splice(index, 1);deActivateEvent(event)"><!--; refresh.next()-->
           Delete
         </button>
         <br><br><br>
-         <button class="btn btn-primary pull-right" (click)="saveEvent()">
-    save event
+         <button class="btn btn-primary pull-right" (click)="updateEventFireBase(event)">
+    update event
   </button>
           </td>
         </tr>
@@ -72,7 +72,7 @@
           Delete
         </button>
         <br><br><br>
-         <button class="btn btn-primary pull-right" (click)="saveEvent()">
+         <button class="btn btn-primary pull-right" (click)="saveEventFireBase()"><!--saveEvent()-->
     save event
   </button>
           </td>
@@ -117,3 +117,11 @@
             </div>
 
             <button type="button" (click)="saveEventFireBase()">save event firabase></button>
+
+
+            <ul>
+<li class="text" *ngFor="let event of events">
+          {{ event.title }}
+
+  </li>
+</ul>

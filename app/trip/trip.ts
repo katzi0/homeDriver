@@ -3,7 +3,7 @@ import { driver } from "../driver/driver";
 
 export class trip {
      constructor(
-    public id: number,
+    public id: string,
     public tripDriver: driver,
     public passsengers: Passenger[],
     //public Passsengers: string,
