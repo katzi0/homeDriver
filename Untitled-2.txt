@@ -1,0 +1,120 @@
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace HomeDriverApi.Models
+{
+    public class CalendarEventRepository : ICalendarEventRepository
+    {
+        private readonly PassengerContext _context;
+
+        public CalendarEventRepository(PassengerContext context)
+        {
+            _context = context;
+
+            //todo: fill all atributes for first calendarevent item
+            if (_context.CalendarEventItems.Count() == 0)
+            {
+                CalendarEvent defCalendarEvent = new CalendarEvent();
+                EventColor defEventColor = new EventColor();
+                PassengerItem defPassengerItem = new PassengerItem();
+                //List<PassengerItem> defPassengerCollection = new List<PassengerItem>();
+                //pi.PassengerKey = 10;
+                //defPassengerItem.Name = "defUserName";
+                //defPassengerCollection.Add(defPassengerItem);
+                //defCalendarEvent.passengers = defPassengerCollection;
+                defEventColor.primary = "#ad2121";
+                defEventColor.secondary = "#ad2121";
+                defCalendarEvent.Color = defEventColor;
+                Add(defCalendarEvent);
+                //Add(new CalendarEvent { });
+            }
+        }
+
+        public void Add(CalendarEvent item)
+        {
+            CalendarEvent ce = new CalendarEvent();
+            List<PassengerItem> pil = new List<PassengerItem>();
+
+            
+            if (item.Color != null)
+            {
+                EventColor ec = new EventColor();
+                ec = item.Color;
+                ce.Color = ec;
+                _context.EventColorItems.Add(item.Color);
+            }
+            foreach (var passenger in item.passengers)
+            {
+                PassengerItem pi = new PassengerItem();
+                pi = passenger;
+                pil.Add(pi);
+                _context.PassengerItems.Add(pi);
+
+                _context.PassengerItems.Attach(pi);
+            }
+            if (item.driver != null)
+            {
+                Driver d = new Driver();
+                d = item.driver;
+                //_context.PassengerItems.Add(pi);
+                ce.driver = d;
+                //_context.Drivers.Add(d);
+            }
+            
+            ce.Key = item.Key;
+            ce.end = item.end;
+            ce.EventColorID = item.EventColorID;
+            ce.passengers = pil;
+            ce.numOfSeats = item.numOfSeats;
+            //ce.PassengerItemID = item.PassengerItemID;
+            ce.start = item.start;
+            ce.title = item.title;
+            _context.CalendarEventItems.Add(ce);
+            _context.SaveChanges();
+        }
+
+        public CalendarEvent Find(long key)
+        {
+            //// return _context.CalendarEventItems.FirstOrDefault(t => t.Key == key);
+            // CalendarEvent CalendarEvent = new CalendarEvent();
+            // CalendarEvent = _context.CalendarEventItems.FirstOrDefault(t => t.Key == key);
+            // CalendarEvent.Color = _context.EventColorItems.FirstOrDefault(t => t.EventColorID == key);
+            //return _context.CalendarEventItems.Where(data => data.EventColorID.Equals(data.Color.EventColorID)).Include(data => data.Color).FirstOrDefault(t => t.Key == key);
+            //  return CalendarEvent;
+            return _context.CalendarEventItems.Include(data => data.Color).FirstOrDefault(t => t.Key == key);
+        }
+
+        public IEnumerable<CalendarEvent> GetAll()
+        {
+            // var results = GetAllProductCategoriesQuery()
+            //return _context.CalendarEventItems.Where(data => data.EventColorID.Equals(data.Color.EventColorID)).Include(data => data.Color).ToList();
+            return _context.CalendarEventItems.Include(data => data.Color).Include(data => data.passengers).Include(data => data.driver).ToList(); //.Include(data => data.passengers.Select(y => y.PassengerKey)
+            //  return _context.CalendarEventItems.ToList();
+        }
+
+        public IEnumerable<CalendarEvent> GetEventsByPassengerID(int passengerID,int dummyParam)
+        {
+
+           // return _context.CalendarEventItems.Include(data => data.Color).Include(data => data.passengers).Include(data => data.driver).Where(c => c.passengers.Any(d => d.PassengerKey.Equals(passengerID))).ToList(); //.Include(data => data.passengers.Select(y => y.PassengerKey)
+            return _context.CalendarEventItems.Where(c => c.passengers.Any(d => d.PassengerKey == passengerID)); //.Include(data => data.passengers.Select(y => y.PassengerKey)
+
+            //return _context.CalendarEventItems.Include(data => data).Where(c => c.passengers.Any(d => d.PassengerKey.Equals(passengerID)));
+        }
+
+        public void Remove(long key)
+        {
+            var entity = _context.CalendarEventItems.First(t => t.Key == key);
+            _context.CalendarEventItems.Remove(entity);
+            _context.SaveChanges();
+        }
+
+        public void Update(CalendarEvent item)
+        {
+            _context.CalendarEventItems.Update(item);
+            _context.SaveChanges();
+        }
+    }
+}

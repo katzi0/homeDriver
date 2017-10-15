@@ -1,0 +1,119 @@
+<div class="row">
+    <div class="col-md-10">
+    <h3>
+      Edit events
+      <button class="btn btn-primary pull-right" (click)="addEvent()">
+    Add new
+  </button>
+   
+      <div class="clearfix"></div>
+    </h3>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Primary color</th>
+          <th>Secondary color</th>
+          <th>Starts at</th>
+          <th>Ends at</th>
+          <th>Remove</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let event of events; let index = index">
+          <td>
+            <input type="text" class="form-control" [(ngModel)]="event.title" ><!--(keyup)="refresh.next()"-->
+          </td>
+          <td>
+            <input type="color" [(ngModel)]="event.color.primary" ><!--(change)="refresh.next()"-->
+          </td>
+          <td>
+            <input type="color" [(ngModel)]="event.color.secondary" ><!--(change)="refresh.next()"-->
+          </td>
+          <td>
+            <mwl-demo-utils-date-time-picker [(date)]="event.start" placeholder="Not set"><!--(dateChange)="refresh.next()"-->
+            </mwl-demo-utils-date-time-picker>
+          </td>
+          <td>
+            <mwl-demo-utils-date-time-picker [(date)]="event.end"  placeholder="Not set"><!--(dateChange)="refresh.next()"-->
+            </mwl-demo-utils-date-time-picker>
+          </td>
+          <td>
+            <button class="btn btn-danger" (click)="events.splice(index, 1)"><!--; refresh.next()-->
+          Delete
+        </button>
+        <br><br><br>
+         <button class="btn btn-primary pull-right" (click)="saveEvent()">
+    save event
+  </button>
+          </td>
+        </tr>
+        <tr>
+                   <td>
+            <input type="text" class="form-control" [(ngModel)]="editedCalendarEvent.title" ><!--(keyup)="refresh.next()"-->
+          </td>
+          <td>
+            <input type="color" [(ngModel)]="editedCalendarEvent.color.primary" ><!--(change)="refresh.next()"-->
+          </td>
+          <td>
+            <input type="color" [(ngModel)]="editedCalendarEvent.color.secondary" >
+          </td>
+          <td>
+            <mwl-demo-utils-date-time-picker [(date)]="editedCalendarEvent.start"  placeholder="Not set"><!--(dateChange)="refresh.next()"-->
+            </mwl-demo-utils-date-time-picker>
+          </td>
+          <td>
+            <mwl-demo-utils-date-time-picker [(date)]="editedCalendarEvent.end"  placeholder="Not set"><!--(dateChange)="refresh.next()"-->
+            </mwl-demo-utils-date-time-picker>
+          </td>
+          <td>
+            <button class="btn btn-danger" (click)="events.splice(index, 1)"> <!--; refresh.next()-->
+          Delete
+        </button>
+        <br><br><br>
+         <button class="btn btn-primary pull-right" (click)="saveEvent()">
+    save event
+  </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+</div>
+<div class="col-md-10">
+    <span >select passengers for trip</span>
+    <div *ngFor="let passenger of passengers;">
+       <input type="checkbox"
+        value="{{passenger}}"
+        [checked] = "passengers.indexOf[passenger] >= 0"
+        (change)="updateCheckedOptions(passenger, $event)"/>
+      <span>{{passenger.name}}</span>
+    </div>
+</div>
+  <button type="button" (click)="updateSelectedPassengers()">save passengers</button>
+  <input type="text" (change)="checkForPassengers()">
+
+
+  <ng2-completer [(ngModel)]="searchStr" [datasource]="dataService" [minSearchLength]="0"></ng2-completer>
+            <h1>Search passenger</h1>
+            <ng2-completer [(ngModel)]="captain" [datasource]="passengersList" [minSearchLength]="0" (selected)="onSelect($event)"></ng2-completer>
+
+            <p>selected passenger</p>
+            <div *ngFor="let passenger of selectedPassengers">
+              <span> {{passenger.name}} {{passenger.id}}
+              </span>
+               <span (click)="removePassengerFromEvent(passenger)">remove</span>
+            </div>
+
+
+            <h1>Search driver</h1>
+            <ng2-completer [(ngModel)]="driver" [datasource]="driversList" [minSearchLength]="0" (selected)="onSelectDriver($event)"></ng2-completer>
+
+             <p>selected driver</p>
+            <div *ngFor="let driver of selectedDrivers">
+              <span>{{driver.name}}</span>
+            </div>
+
+            <button type="button" (click)="saveEventFireBase()">save event firabase></button>

@@ -1,0 +1,22 @@
+<h1>
+  {{title}}
+</h1>
+<nav>
+    <a routerLink="/passengers" routerLinkActive="active">passengers</a>
+     <a routerLink="/drivers" routerLinkActive="active">drivers</a>
+    <a routerLink="/add-event" routerLinkActive="active">add event</a>
+    <a routerLink="/calendar" routerLinkActive="active">calendar</a>
+    <a routerLink="/events" routerLinkActive="active">events</a>
+    <a routerLink="/trips" routerLinkActive="active">trips</a>
+  </nav>
+  <ul>
+  <!-- <li class="text" *ngFor="let item of items | async" (click) = "addItem(item)">
+          {{ item.name }}
+
+  </li> -->
+</ul>
+  <router-outlet></router-outlet>
+<!--<passenger-component></passenger-component>-->
+<!--<trip-component></trip-component>-->
+<!--<trip-form></trip-form>-->
+<!--<all-day></all-day>-->

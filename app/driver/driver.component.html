@@ -1,0 +1,11 @@
+<h1>driver component </h1>
+
+<div *ngFor="let driver of drivers">{{driver.name}}</div>   
+<!--<div>{{test.name}}</div>-->
+<h3>{{driverToSave.name}}</h3>
+<input type="text" [(ngModel)]="driverToSave.name">
+<button (click)="saveDriver()" class="btn btn-primary">save</button>
+<!--<mwl-calendar-month-view
+  [viewDate]="viewDate"
+  [events]="events">
+</mwl-calendar-month-view>-->
